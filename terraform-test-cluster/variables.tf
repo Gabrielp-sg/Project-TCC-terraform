@@ -10,18 +10,6 @@ variable "cluster_name" {
   default     = "my-eks-cluster"
 }
 
-<<<<<<< HEAD
-=======
-variable "vpc_id" {
-  description = "VPC ID where EKS cluster will be created"
-  type        = string
-}
-
-variable "subnet_ids" {
-  description = "List of subnet IDs for the EKS cluster"
-  type        = list(string)
-}
->>>>>>> main
 
 variable "node_group_name" {
   description = "Name of the EKS node group"
@@ -36,18 +24,18 @@ variable "node_instance_type" {
 }
 
 variable "desired_capacity" {
-  type        = number
-  default     = 2
+  type    = number
+  default = 2
 }
 
 variable "max_size" {
-  type        = number
-  default     = 3
+  type    = number
+  default = 3
 }
 
 variable "min_size" {
-  type        = number
-  default     = 1
+  type    = number
+  default = 1
 }
 variable "bucket_name" {
   default = "terra-backend-vpc-eu"

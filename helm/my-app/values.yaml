@@ -1,7 +1,7 @@
 replicaCount: 2
 
 image:
-  repository: seu-usuario-dockerhub/my-app
+  repository: gabrielpsg/my-app-tcc
   pullPolicy: IfNotPresent
   tag: "latest"
 

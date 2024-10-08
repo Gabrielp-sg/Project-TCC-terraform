@@ -10,6 +10,18 @@ variable "cluster_name" {
   default     = "my-eks-cluster"
 }
 
+<<<<<<< HEAD
+=======
+variable "vpc_id" {
+  description = "VPC ID where EKS cluster will be created"
+  type        = string
+}
+
+variable "subnet_ids" {
+  description = "List of subnet IDs for the EKS cluster"
+  type        = list(string)
+}
+>>>>>>> main
 
 variable "node_group_name" {
   description = "Name of the EKS node group"

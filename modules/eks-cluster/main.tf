@@ -17,7 +17,6 @@ resource "aws_eks_cluster" "this" {
   }
 }
 
-
 resource "aws_iam_role" "eks_cluster_role" {
   name = "${var.cluster_name}-eks-cluster-role"
 
@@ -50,14 +49,20 @@ resource "aws_eks_node_group" "this" {
   instance_types = [var.node_instance_type]
 }
 
+<<<<<<< HEAD:modules/eks-cluster/main.tf
 # Definindo a IAM Role para os nós do cluster EKS
+=======
+>>>>>>> main:modules/eks/main.tf
 resource "aws_iam_role" "eks_node_role" {
   name = "${var.cluster_name}-eks-node-role"
 
   assume_role_policy = data.aws_iam_policy_document.eks_node_assume_role_policy.json
 }
 
+<<<<<<< HEAD:modules/eks-cluster/main.tf
 # Política de assunção da IAM Role para os nós do cluster EKS
+=======
+>>>>>>> main:modules/eks/main.tf
 data "aws_iam_policy_document" "eks_node_assume_role_policy" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -69,6 +74,7 @@ data "aws_iam_policy_document" "eks_node_assume_role_policy" {
   }
 }
 
+<<<<<<< HEAD:modules/eks-cluster/main.tf
 # Data source para buscar os ARNs das políticas gerenciadas do IAM
 data "aws_iam_policy" "eks_managed_policies" {
   for_each = toset(local.eks_node_policies)
@@ -84,6 +90,15 @@ resource "aws_iam_role_policy_attachment" "eks_node_role_attachment" {
 }
 
 # Anexando a política do EKS Cluster à IAM Role do cluster
+=======
+resource "aws_iam_role_policy_attachment" "eks_node_role_attachment" {
+  for_each = toset(["AmazonEKSWorkerNodePolicy", "AmazonEC2ContainerRegistryReadOnly", "AmazonEKS_CNI_Policy"])
+
+  policy_arn = aws_iam_policy.${each.key}.arn
+  role       = aws_iam_role.eks_node_role.name
+}
+
+>>>>>>> main:modules/eks/main.tf
 resource "aws_iam_role_policy_attachment" "eks_cluster_role_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
   role       = aws_iam_role.eks_cluster_role.name

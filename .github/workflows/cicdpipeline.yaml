@@ -1,0 +1,54 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checar código
+      uses: actions/checkout@v2
+
+    - name: Configurar Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Instalar dependências
+      run: npm install
+
+    - name: Build da aplicação
+      run: npm run build
+
+    - name: Logar no DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+    - name: Build e Push da imagem Docker
+      run: |
+        docker build -t gabrielpsg/my-app-tcc:latest .
+        docker push gabrielpsg/my-app-tcc:latest
+
+    - name: Instalar kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest'
+
+    - name: Instalar Helm
+      uses: azure/setup-helm@v1
+      with:
+        version: 'v3.8.0'
+
+    - name: Implantar com Helm
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+      run: |
+        echo "${KUBE_CONFIG_DATA}" | base64 --decode > kubeconfig.yaml
+        kubectl config view
+        helm upgrade --install my-app ./helm/my-app --kubeconfig kubeconfig.yaml

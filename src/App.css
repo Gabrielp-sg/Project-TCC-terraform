@@ -1,0 +1,24 @@
+.App {
+    text-align: center;
+    background-color: #282c34;
+    min-height: 100vh;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .App-header {
+    margin: 0 auto;
+    max-width: 800px;
+  }
+  
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    font-size: 1.2rem;
+  }
+  

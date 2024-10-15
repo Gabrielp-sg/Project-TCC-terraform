@@ -37,13 +37,6 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
                 
-    - name: test connection
-      env:
-        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-      run: |          
-        echo "${KUBE_CONFIG_DATA}" | base64 --decode > kubeconfig.yaml
-        kubectl config view --kubeconfig=kubeconfig.yaml
-
     - name: Build e Push da imagem Docker
       run: |
         docker build -t gabrielpsg/my-app-tcc:latest .
@@ -63,7 +56,7 @@ jobs:
       env:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
       run: |
-        echo "${KUBE_CONFIG_DATA}" | tr -d '\n' | base64 --decode > kubeconfig.yaml
+        echo "${KUBE_CONFIG_DATA}" | base64 --decode > kubeconfig.yaml
         kubectl config view --kubeconfig=kubeconfig.yaml
         helm upgrade --install my-app ./helm/my-app --kubeconfig kubeconfig.yaml
     

@@ -19,7 +19,9 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
-        
+    - name: Verificar identidade AWS
+      run: aws sts get-caller-identity
+
     - name: Configurar Node.js
       uses: actions/setup-node@v2
       with:
@@ -56,8 +58,13 @@ jobs:
       env:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
       run: |
-        echo "${KUBE_CONFIG_DATA}" | tr -d '\n' | base64 --decode > kubeconfig.yaml
+        echo "${KUBE_CONFIG_DATA}" | base64 --decode > kubeconfig.yaml
+        chmod 600 kubeconfig.yaml
         kubectl config view --kubeconfig=kubeconfig.yaml
         helm upgrade --install my-app ./helm/my-app --kubeconfig kubeconfig.yaml
+
+    - name: Testar Conexão com o Cluster
+      run: kubectl get nodes --kubeconfig=kubeconfig.yaml
+
     - name: Verificar Kubeconfig
       run: cat kubeconfig.yaml

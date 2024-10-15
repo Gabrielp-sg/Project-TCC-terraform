@@ -1,7 +1,3 @@
-provider "aws" {
-  region = var.region
-}
-
 module "eks" {
   source             = "../modules/eks-cluster"
   cluster_name       = var.cluster_name

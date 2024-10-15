@@ -56,6 +56,8 @@ jobs:
       env:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
       run: |
-        echo "${KUBE_CONFIG_DATA}" | base64 --decode > kubeconfig.yaml
-        kubectl config view
+        echo "${KUBE_CONFIG_DATA}" | tr -d '\n' | base64 --decode > kubeconfig.yaml
+        kubectl config view --kubeconfig=kubeconfig.yaml
         helm upgrade --install my-app ./helm/my-app --kubeconfig kubeconfig.yaml
+    - name: Verificar Kubeconfig
+      run: cat kubeconfig.yaml

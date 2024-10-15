@@ -54,6 +54,12 @@ jobs:
       with:
         version: 'v3.8.0'
 
+    - name: Testar Conexão com o Cluster
+      run: kubectl get nodes --kubeconfig=kubeconfig.yaml
+
+    - name: Verificar Kubeconfig
+      run: cat kubeconfig.yaml
+      
     - name: Implantar com Helm
       env:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
@@ -63,8 +69,3 @@ jobs:
         kubectl config view --kubeconfig=kubeconfig.yaml
         helm upgrade --install my-app ./helm/my-app --kubeconfig kubeconfig.yaml
 
-    - name: Testar Conexão com o Cluster
-      run: kubectl get nodes --kubeconfig=kubeconfig.yaml
-
-    - name: Verificar Kubeconfig
-      run: cat kubeconfig.yaml

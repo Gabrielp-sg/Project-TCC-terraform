@@ -37,10 +37,6 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-    - name: Build e Push da imagem Docker
-      run: |
-        docker build -t gabrielpsg/my-app-tcc:latest .
-        docker push gabrielpsg/my-app-tcc:latest
 
     - name: Instalar kubectl
       uses: azure/setup-kubectl@v3
@@ -55,6 +51,7 @@ jobs:
     - name: Testar Conexão com o Cluster
       run: |
         echo "${KUBE_CONFIG_DATA}" | base64 --decode > kubeconfig.yaml
+        kubectl config use-context arn:aws:eks:us-east-1:891377113883:cluster/my-eks-cluster --kubeconfig=kubeconfig.yaml
         kubectl get nodes --kubeconfig=kubeconfig.yaml
 
     - name: Verificar Kubeconfig

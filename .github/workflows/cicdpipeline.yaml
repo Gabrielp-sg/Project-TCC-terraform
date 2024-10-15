@@ -19,7 +19,7 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
-
+        
     - name: Configurar Node.js
       uses: actions/setup-node@v2
       with:
@@ -36,7 +36,16 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
+                
+    - name: test connection
+      run: |          
+        echo "${KUBE_CONFIG_DATA}" | base64 --decode > kubeconfig.yaml
+        kubectl config view --kubeconfig=kubeconfig.yaml
 
+    - name: Build e Push da imagem Docker
+      run: |
+        docker build -t gabrielpsg/my-app-tcc:latest .
+        docker push gabrielpsg/my-app-tcc:latest
 
     - name: Instalar kubectl
       uses: azure/setup-kubectl@v3
@@ -48,21 +57,11 @@ jobs:
       with:
         version: 'v3.8.0'
 
-    - name: Testar Conexão com o Cluster
-      run: |
-        echo "${KUBE_CONFIG_DATA}" | tr -d '\n' | base64 --decode > kubeconfig.yaml
-        kubectl config use-context arn:aws:eks:us-east-1:891377113883:cluster/my-eks-cluster --kubeconfig=kubeconfig.yaml
-        kubectl get nodes --kubeconfig=kubeconfig.yaml
-
-    - name: Verificar Kubeconfig
-      run: cat kubeconfig.yaml
-
     - name: Implantar com Helm
       env:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
       run: |
-        echo "${KUBE_CONFIG_DATA}" | base64 --decode > kubeconfig.yaml
-        chmod 600 kubeconfig.yaml
+        echo "${KUBE_CONFIG_DATA}" | tr -d '\n' | base64 --decode > kubeconfig.yaml
         kubectl config view --kubeconfig=kubeconfig.yaml
         helm upgrade --install my-app ./helm/my-app --kubeconfig kubeconfig.yaml
-
+    

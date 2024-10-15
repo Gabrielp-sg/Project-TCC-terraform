@@ -50,7 +50,7 @@ jobs:
 
     - name: Testar Conexão com o Cluster
       run: |
-        echo "${KUBE_CONFIG_DATA}" | base64 --decode > kubeconfig.yaml
+        echo "${KUBE_CONFIG_DATA}" | tr -d '\n' | base64 --decode > kubeconfig.yaml
         kubectl config use-context arn:aws:eks:us-east-1:891377113883:cluster/my-eks-cluster --kubeconfig=kubeconfig.yaml
         kubectl get nodes --kubeconfig=kubeconfig.yaml
 

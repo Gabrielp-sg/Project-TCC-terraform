@@ -1,1 +1,1 @@
-{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"eks","Source":"../modules/eks-cluster","Dir":"../modules/eks-cluster"}]}
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"aws_s3_bucket","Source":"../modules/buckets","Dir":"../modules/buckets"},{"Key":"eks","Source":"../modules/eks-cluster","Dir":"../modules/eks-cluster"}]}
